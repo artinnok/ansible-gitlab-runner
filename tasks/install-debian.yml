@@ -35,13 +35,6 @@
   package_facts:
     manager: apt
 
-- name: (Debian) Unhold GitLab Runner version
-  changed_when: false
-  dpkg_selections:
-    name: "{{ gitlab_runner_package_name }}"
-    selection: install
-  when: "'gitlab-runner' in ansible_facts.packages"
-
 - name: (Debian) Install GitLab Runner
   apt:
     name: "{{ gitlab_runner_package }}"
@@ -59,13 +52,6 @@
     allow_downgrade: true
   become: true
   when: ansible_distribution_release not in ["buster", "focal", "jammy"]
-
-- name: (Debian) Hold GitLab Runner version
-  dpkg_selections:
-    name: "{{ gitlab_runner_package_name }}"
-    selection: hold
-  when: gitlab_runner_package_version is defined
-  changed_when: false
 
 - name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal
   file:
